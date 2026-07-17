@@ -1,4 +1,8 @@
 package Enemy;
 
-public class EnemyType {
+public enum EnemyType {
+    REGULAR,
+    FAST,
+    EXPLOSIVE,
+    BOSS
 }
