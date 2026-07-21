@@ -1,8 +1,9 @@
 package Enemy;
 
 public enum EnemyType {
-    REGULAR,
+    NORMAL,
     FAST,
-    EXPLOSIVE,
+    ZIGZAG,
+    SHOOTER,
     BOSS
 }

@@ -1,6 +1,6 @@
 package Enemy;
 
-import chickeninvaders.game.Egg;
+import Enemy.Egg;
 import javax.swing.ImageIcon;
 import java.awt.*;
 import java.util.List;

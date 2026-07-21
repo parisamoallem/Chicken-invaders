@@ -1,6 +1,6 @@
 package Enemy;
 
-import chickeninvaders.game.Egg;
+import Enemy.Egg;
 import java.awt.*;
 import java.util.List;
 
@@ -13,9 +13,9 @@ public class BossLevel8 extends Boss {
     private long lastDirectionChange = 0;
 
     public BossLevel8(int panelWidth) {
-        super(panelWidth / 2.0 - 90, 30, 180, 135, 100, 2.0, 1000, 5.0);
+        super(panelWidth / 2.0 - 90, 30, 180, 135, 300, 2.0, 1000, 5.0);
         this.baseY = 30;
-        this.bossImage = loadImage("resources/boss_8.png");
+        this.bossImage = loadImage("resources/boss2.png");
     }
 
     @Override

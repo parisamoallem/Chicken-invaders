@@ -1,6 +1,6 @@
 package Enemy;
 
-import chickeninvaders.game.Cell;
+import Enemy.Cell;
 import java.awt.*;
 
 public class NormalEnemy extends Enemy {

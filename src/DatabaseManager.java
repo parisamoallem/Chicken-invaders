@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:C:/Users/fariba/IdeaProjects/finalProject/game.db";
@@ -136,6 +138,30 @@ public class DatabaseManager {
             user.setLastLevel(levelReached);
 
         updateUser(user);
+    }
+
+    //جدول High Scores: به ازای هر کاربر فقط بالاترین امتیازش
+    public static List<String[]> getTopScores(int limit) {
+        List<String[]> rows = new ArrayList<>();
+        String sql = "SELECT username, MAX(score) AS score, level_reached, play_time "
+                   + "FROM games GROUP BY username ORDER BY score DESC LIMIT ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, limit);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                rows.add(new String[]{
+                        rs.getString("username"),
+                        String.valueOf(rs.getInt("score")),
+                        String.valueOf(rs.getInt("level_reached")),
+                        rs.getString("play_time")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("خطا در خواندن جدول امتیازات: " + e.getMessage());
+        }
+        return rows;
     }
 }
 

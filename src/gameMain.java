@@ -2,43 +2,43 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.*;
 
-public class gameMain extends JFrame{
-
+public class gameMain extends JFrame {
     private CardLayout cardLayout;
     private JPanel mainPanel;
     private GamePanel gamePanel;
 
     private User currentUser;
     private MainMenu menuPanel;
+    private SettingsPanel settingsPanel;
+    private HighScorePanel highScorePanel;
 
     public gameMain(){
-        //پنجره اصلی
         setTitle("Chicken Invaders - AP Project");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        //سیستم کارت و پنل ها
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
+        gamePanel = new GamePanel(this);
+
         LoginPanel loginPanel = new LoginPanel(this);
-        MainMenu menuPanel = new MainMenu(this);
+        RegisterPanel registerPanel = new RegisterPanel(this);
+        menuPanel = new MainMenu(this);
 
-        JPanel highScoresPanel = new JPanel();
-        highScoresPanel.setBackground(Color.GREEN);
+        highScorePanel = new HighScorePanel(this);
 
-        JPanel settingsPanel = new JPanel();
-        settingsPanel.setBackground(Color.ORANGE);
+        settingsPanel = new SettingsPanel(this);
 
-        JPanel howToPlayPanel = new JPanel();
-        howToPlayPanel.setBackground(Color.PINK);
+        HowToPlayPanel howToPlayPanel = new HowToPlayPanel(this);
 
         mainPanel.add(gamePanel, "Game");
         mainPanel.add(loginPanel, "Login");
+        mainPanel.add(registerPanel, "Register");
         mainPanel.add(menuPanel, "Menu");
-        mainPanel.add(highScoresPanel, "HighScores");
+        mainPanel.add(highScorePanel, "HighScores");
         mainPanel.add(settingsPanel, "Settings");
         mainPanel.add(howToPlayPanel, "HowToPlay");
 
@@ -54,29 +54,33 @@ public class gameMain extends JFrame{
         return gamePanel;
     }
 
+    public HighScorePanel getHighScorePanel() {
+        return highScorePanel;
+    }
+
+    public SettingsPanel getSettingsPanel() {
+        return settingsPanel;
+    }
+
     public void startNewGame() {
         if (currentUser == null) {
             changePanel("Login");
             return;
         }
 
-        // اگر بازی قبلی در جریان بوده، پنل قدیمی را حذف می‌کنیم تا ریست شود
         if (gamePanel != null) {
             mainPanel.remove(gamePanel);
         }
 
-        // ساخت پنل بازی جدید با مشخصات کاربر جاری
-        gamePanel = new GamePanel(this, User currentUser);
+        gamePanel = new GamePanel(this);
         mainPanel.add(gamePanel, "Game");
 
         changePanel("Game");
 
-        // فوکوس کیبورد روی بازی و شروع حلقه تایمر بازی
         gamePanel.requestFocusInWindow();
         gamePanel.startGame();
     }
 
-    // گتر و ستر برای کاربر فعلی برنامه
     public User getCurrentUser() {
         return currentUser;
     }
@@ -84,24 +88,20 @@ public class gameMain extends JFrame{
     public void setCurrentUser(User user) {
         this.currentUser = user;
         if (user != null && menuPanel != null) {
-            // تغییر لیبل منوی اصلی به خوش‌آمدگویی با نام کاربر (مثلاً: خوش آمدی p!)
             menuPanel.setLoggedInLabel(user.getUsername());
+
+            SoundManager.setThemeOn(user.isBgmOn());
         }
     }
 
-
     public static void main(String[] args) {
-        // ۱. ابتدا دیتابیس را راه‌اندازی می‌کنیم تا جدول ساخته شود
         DatabaseManager.initDatabase();
 
         System.out.println("--- تست ثبت‌نام ---");
         boolean registerResult = DatabaseManager.registerUser("p", "1");
 
-        // ۴. اجرای برنامه گرافیکی اصلی (کد قبلی خودت)
         javax.swing.SwingUtilities.invokeLater(() -> {
             new gameMain().setVisible(true);
         });
     }
-
-
 }

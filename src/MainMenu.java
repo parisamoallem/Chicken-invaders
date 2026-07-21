@@ -38,18 +38,42 @@ public class MainMenu extends JPanel{
         //-------------------------------
 
         btnNewGame.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "آماده پرواز؟ بازی به زودی شروع می‌شود!");
             mainFrame.changePanel("Game");
             mainFrame.getGamePanel().startGame();
         });
 
-        btnHighScores.addActionListener(e -> mainFrame.changePanel("HighScores"));
-        btnSettings.addActionListener(e -> mainFrame.changePanel("Settings"));
+        btnHighScores.addActionListener(e -> {
+            mainFrame.getHighScorePanel().refresh();
+            mainFrame.changePanel("HighScores");
+        });
+
+        btnSettings.addActionListener(e -> {
+            mainFrame.getSettingsPanel().refresh();
+            mainFrame.changePanel("Settings");
+        });
+
         btnHowToPlay.addActionListener(e -> mainFrame.changePanel("HowToPlay"));
 
+
         btnExit.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(this, "آیا می‌خواهید خارج شوید؟", "خروج", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
+            UIManager.put("OptionPane.background", new Color(30, 30, 50));
+            UIManager.put("Panel.background", new Color(30, 30, 50));
+            UIManager.put("OptionPane.messageForeground", Color.WHITE);
+            UIManager.put("OptionPane.messageFont", new Font("Consolas", Font.BOLD, 15));
+
+            Object[] options = {"YES", "NO"};
+
+            int confirm = JOptionPane.showOptionDialog(
+                    this,
+                    "Are you sure you want to exit?",
+                    "Exit Game",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[1]
+            );
+            if (confirm == 0) {
                 System.exit(0);
             }
         });

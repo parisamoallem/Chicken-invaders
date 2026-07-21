@@ -1,6 +1,5 @@
 package Enemy;
 
-import chickeninvaders.game.Cell;
 import java.awt.*;
 
 public class ZigzagEnemy extends Enemy {

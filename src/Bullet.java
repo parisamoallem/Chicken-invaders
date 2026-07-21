@@ -2,9 +2,9 @@ import javax.swing.ImageIcon;
 import java.awt.*;
 
 public class Bullet {
-    private static final int SPEED = 8;
-    public static final int WIDTH = 6;
-    public static final int HEIGHT = 20;
+    private static final int SPEED = 9;
+    public static final int WIDTH = 10;
+    public static final int HEIGHT = 28;
 
     private int x, y;
     private boolean alive = true;
@@ -13,7 +13,7 @@ public class Bullet {
     public Bullet(int startX, int startY) {
         this.x = startX;
         this.y = startY;
-        this.bulletImage = loadImage("resources/player_bullet.png");
+        this.bulletImage = loadImage("resources/shot.png");
     }
 
     private Image loadImage(String path) {
@@ -48,8 +48,10 @@ public class Bullet {
         if (bulletImage != null) {
             g.drawImage(bulletImage, x, y, WIDTH, HEIGHT, null);
         } else {
-            g.setColor(Color.YELLOW);
-            g.fillRect(x, y, WIDTH, HEIGHT);
+            g.setColor(new Color(255, 220, 50));
+            g.fillRoundRect(x, y, WIDTH, HEIGHT, 4, 4);
+            g.setColor(Color.WHITE);
+            g.fillRect(x + 3, y + 2, WIDTH - 6, HEIGHT - 4);
         }
     }
 

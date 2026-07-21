@@ -1,6 +1,6 @@
 package Enemy;
 
-import chickeninvaders.game.Egg;
+import Enemy.Egg;
 import java.awt.*;
 import java.util.List;
 
@@ -12,9 +12,9 @@ public class BossLevel4 extends Boss {
 
     public BossLevel4(int panelWidth) {
         // تغییر عرض به ۱۴۰ و ارتفاع به ۱۰۰ جهت سایز منطقی و چشم‌نواز تصویر
-        super(panelWidth / 2.0 - 70, 40, 140, 100, 50, 1.5, 1500, 4.0);
+        super(panelWidth / 2.0 - 70, 40, 140, 100, 150, 1.5, 1500, 4.0);
         this.baseY = 40;
-        this.bossImage = loadImage("resources/boss_4.png");
+        this.bossImage = loadImage("resources/boss1.png");
     }
 
     @Override

@@ -1,77 +1,136 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class LoginPanel extends JPanel{
+public class LoginPanel extends JPanel {
 
-    public LoginPanel(gameMain mainFrame){
+    public LoginPanel(gameMain mainFrame) {
         setLayout(null);
-        setBackground(Color.darkGray);
+        setBackground(new Color(30, 30, 50));
 
-        JLabel titleLabel = new JLabel("ورود به بازی" , SwingConstants.CENTER);
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setBounds(300, 50, 200, 40);
+        JLabel titleLabel = new JLabel("CHICKEN INVADERS", SwingConstants.CENTER);
+        titleLabel.setForeground(new Color(255, 215, 0)); // Gold Yellow
+        titleLabel.setFont(new Font("Consolas", Font.BOLD, 34));
+        titleLabel.setBounds(200, 30, 400, 45);
         add(titleLabel);
 
-        JLabel userLabel = new JLabel("نام کاربری");
+        JPanel cardPanel = new JPanel(null);
+        cardPanel.setBackground(new Color(45, 45, 70));
+        cardPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(80, 80, 120), 2, true),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        cardPanel.setBounds(200, 95, 400, 420);
+
+        JLabel subTitle = new JLabel("PLAYER LOGIN", SwingConstants.CENTER);
+        subTitle.setForeground(new Color(0, 255, 255)); // Cyan Accent
+        subTitle.setFont(new Font("Consolas", Font.BOLD, 20));
+        subTitle.setBounds(50, 20, 300, 30);
+        cardPanel.add(subTitle);
+
+        // یوزرنیم
+        JLabel userLabel = new JLabel("Username:");
         userLabel.setForeground(Color.WHITE);
-        userLabel.setBounds(200, 150, 100, 30);
-        add(userLabel);
+        userLabel.setFont(new Font("Consolas", Font.BOLD, 14));
+        userLabel.setBounds(40, 70, 320, 25);
+        cardPanel.add(userLabel);
 
-        JTextField userField = new JTextField();
-        userField.setBounds(320, 150, 200, 30);
-        add(userField);
+        JTextField userField = createStyledTextField();
+        userField.setBounds(40, 100, 320, 38);
+        cardPanel.add(userField);
 
-        JLabel passLabel = new JLabel("رمز عبور:");
+        // پسورد
+        JLabel passLabel = new JLabel("Password:");
         passLabel.setForeground(Color.WHITE);
-        passLabel.setBounds(200, 210, 100, 30);
-        add(passLabel);
+        passLabel.setFont(new Font("Consolas", Font.BOLD, 14));
+        passLabel.setBounds(40, 150, 320, 25);
+        cardPanel.add(passLabel);
 
-        JPasswordField passField = new JPasswordField();
-        passField.setBounds(320, 210, 200, 30);
-        add(passField);
+        JPasswordField passField = createStyledPasswordField();
+        passField.setBounds(40, 180, 320, 38);
+        cardPanel.add(passField);
 
-        JButton loginButton = new JButton("ورود");
-        loginButton.setBounds(320, 280, 90, 35);
-        add(loginButton);
+        // لاگین
+        JButton loginButton = new JButton("LOGIN");
+        loginButton.setFont(new Font("Consolas", Font.BOLD, 15));
+        loginButton.setFocusPainted(false);
+        loginButton.setBounds(40, 245, 320, 42);
+        cardPanel.add(loginButton);
 
-        JButton goToRegisterButton = new JButton("ثبت نام");
-        goToRegisterButton.setBounds(430, 280, 90, 35);
-        add(goToRegisterButton);
+        // ساختن اکانت
+        JLabel noAccountLabel = new JLabel("Don't have an account?", SwingConstants.CENTER);
+        noAccountLabel.setForeground(new Color(180, 180, 210));
+        noAccountLabel.setFont(new Font("Consolas", Font.PLAIN, 12));
+        noAccountLabel.setBounds(40, 305, 320, 20);
+        cardPanel.add(noAccountLabel);
 
-        //دکمه ها  ------------------
+        JButton goToRegisterButton = new JButton("Create New Account");
+        goToRegisterButton.setFont(new Font("Consolas", Font.BOLD, 13));
+        goToRegisterButton.setFocusPainted(false);
+        goToRegisterButton.setBounds(80, 335, 240, 35);
+        cardPanel.add(goToRegisterButton);
 
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = userField.getText();
-                String password = new String(passField.getPassword());
+        add(cardPanel);
 
-                if (username.isEmpty() || password.isEmpty()){
-                    JOptionPane.showMessageDialog(LoginPanel.this, "خطا", "لطفا تمامی فیلد ها را پر کنید.", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+        // اکشن هاشون
+        loginButton.addActionListener(e -> {
+            String username = userField.getText().trim();
+            String password = new String(passField.getPassword());
 
-                User loggedInUser = DatabaseManager.loginUser(username, password);
+            if (username.isEmpty() || password.isEmpty()) {
+                showCustomDialog("Please fill in all fields!", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-                if (loggedInUser != null){
-                    JOptionPane.showMessageDialog(LoginPanel.this, "ورود با موفقیت انجام شد :)");
+            User loggedInUser = DatabaseManager.loginUser(username, password);
 
-                    mainFrame.setCurrentUser(loggedInUser);
-                    mainFrame.changePanel("Menu");
-                } else {
-                    JOptionPane.showMessageDialog(LoginPanel.this, "نام کاربری یا رمز عبور اشتباه است :(", "خطا", JOptionPane.WARNING_MESSAGE);
-                }
+            if (loggedInUser != null) {
+                userField.setText("");
+                passField.setText("");
+                mainFrame.setCurrentUser(loggedInUser);
+                mainFrame.changePanel("Menu");
+            } else {
+                showCustomDialog("Invalid username or password!", "Login Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        goToRegisterButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.changePanel("Register");
-            }
+        goToRegisterButton.addActionListener(e -> {
+            userField.setText("");
+            passField.setText("");
+            mainFrame.changePanel("Register");
         });
+    }
+
+    private JTextField createStyledTextField() {
+        JTextField field = new JTextField();
+        field.setFont(new Font("Consolas", Font.PLAIN, 14));
+        field.setBackground(new Color(25, 25, 40));
+        field.setForeground(Color.WHITE);
+        field.setCaretColor(Color.YELLOW);
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(70, 70, 100), 1),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        return field;
+    }
+
+    private JPasswordField createStyledPasswordField() {
+        JPasswordField field = new JPasswordField();
+        field.setFont(new Font("Consolas", Font.PLAIN, 14));
+        field.setBackground(new Color(25, 25, 40));
+        field.setForeground(Color.WHITE);
+        field.setCaretColor(Color.YELLOW);
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(70, 70, 100), 1),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        return field;
+    }
+
+    private void showCustomDialog(String message, String title, int messageType) {
+        UIManager.put("OptionPane.background", new Color(30, 30, 50));
+        UIManager.put("Panel.background", new Color(30, 30, 50));
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
+        UIManager.put("OptionPane.messageFont", new Font("Consolas", Font.BOLD, 14));
+        JOptionPane.showMessageDialog(this, message, title, messageType);
     }
 }
